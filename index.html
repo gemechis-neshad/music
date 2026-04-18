@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Gemechis' Music Site</title>
+    <link href="https://googleapis.com" rel="stylesheet">
+
+    <style>
+        /* 1. Global Dark Theme */
+        body { font-family: 'Montserrat', sans-serif; background-color: #121212; color: #e0e0e0; margin: 0; padding: 0; line-height: 1.6; }
+        
+        /* 2. Navigation */
+        nav { background-color: #1e1e1e; padding: 15px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.5); text-align: center; }
+        nav a { color: #e0e0e0; text-decoration: none; margin: 0 15px; font-weight: 600; transition: color 0.3s; }
+        nav a:hover { color: #bb86fc; }
+
+        /* 3. Layout */
+        main { max-width: 800px; margin: 0 auto; padding: 40px 20px; text-align: center; }
+        section { background-color: #1e1e1e; border: 1px solid #333; border-radius: 12px; padding: 25px; margin-bottom: 30px; transition: transform 0.3s; }
+        section:hover { transform: translateY(-5px); border-color: #bb86fc; }
+        h1 { color: #ffffff; font-size: 2.5rem; margin-bottom: 20px; }
+        h2 { color: #bb86fc; margin-top: 0; }
+        p { color: #b0b3b8; }
+
+        /* 4. Video Styling */
+        iframe { width: 100%; max-width: 100%; aspect-ratio: 16 / 9; border-radius: 8px; border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        footer { text-align: center; padding: 50px; color: #555; border-top: 1px solid #333; font-size: 0.9rem; }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="#">Home</a>
+        <a href="#music">Music</a>
+        <a href="#contact">Contact</a>
+    </nav>
+
+    <main id="music">
+        <h1>Some of Gemechis' Favorite Music</h1>
+        <p>Music captures emotions and memories that words alone sometimes can't reach.</p>
+
+        <section>
+            <h2>Justin Bieber - Walking Away</h2>
+            <p>This song is incredibly special to me because it reminds me of moving forward.</p>
+            <!-- ADDED: &origin=https://github.io -->
+            <iframe id="vid1" src="https://www.youtube.com/embed/sbF2O_LOyyQ?enablejsapi=1&origin=https://github.io" title="Walking Away" allowfullscreen></iframe>
+        </section>
+
+        <section>
+            <h2>Ed Sheeran & Justin Bieber - I Don't Care</h2>
+            <p>This track is my ultimate anthem for finding comfort in the right person.</p>
+            <iframe id="vid2" src="https://www.youtube.com/embed/y83x7MgzWOA?enablejsapi=1&origin=https://github.io" title="I Don't Care" allowfullscreen></iframe>
+        </section>
+
+        <section>
+            <h2>Ed Sheeran - Perfect</h2>
+            <p>To me, this is the most beautiful love song ever written.</p>
+            <iframe id="vid3" src="https://www.youtube.com/embed/2Vv-BfVoq4g?enablejsapi=1&origin=https://github.io" title="Perfect" allowfullscreen></iframe>
+        </section>
+
+        <section id="contact">
+            <h2>Get in Touch</h2>
+            <p>Have a song recommendation? Reach out to me anytime!</p>
+        </section>
+    </main>
+
+    <footer>&copy; 2026 Gemechis. All rights reserved.</footer>
+
+    <!-- SCRIPT: The "Manager" that pauses other videos -->
+    <script>
+        // 1. Load the YouTube API code asynchronously
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        // 2. Create an array to hold our players
+        var players = [];
+
+        // 3. This function runs AUTOMATICALLY when the API is ready
+        function onYouTubeIframeAPIReady() {
+            var iframes = ['vid1', 'vid2', 'vid3'];
+            
+            iframes.forEach(function(id) {
+                players.push(new YT.Player(id, {
+                    events: {
+                        'onStateChange': onPlayerStateChange
+                    }
+                }));
+            });
+        }
+
+        // 4. The Logic: When one plays, pause the others
+        function onPlayerStateChange(event) {
+            // If the event is "PLAYING" (Status Code 1)
+            if (event.data == YT.PlayerState.PLAYING) {
+                players.forEach(function(p) {
+                    // If this player is NOT the one that just started
+                    if (p.getIframe().id !== event.target.getIframe().id) {
+                        p.pauseVideo();
+                    }
+                });
+            }
+        }
+    </script>
+
+</body>
+</html>
